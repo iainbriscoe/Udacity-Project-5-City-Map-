@@ -1,0 +1,37 @@
+/* {
+	border: 1px solid red !important;
+}
+*/
+
+body{
+	background-color: black; 
+	color: black;
+	
+}
+
+input{
+	color: black;
+}
+
+#header {
+	height: 100px;
+}
+
+#locations{
+	height: 100%;
+	color: white;
+}
+
+.search-location-field {
+	color: black;
+}
+
+
+ul{
+	list-style-type: none;
+}
+
+h4 {
+	margin-top: 50px; 
+}
+

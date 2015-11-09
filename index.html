@@ -1,0 +1,39 @@
+<html> 
+<head>
+    <title>Waterloo Map</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script type="text/javascript" src="js/jquery-1.11.3.js"></script>
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+	<div class="container">
+		<div class="col-md-3" id="locations">
+
+			<h1>Waterloo Ontario</h1>
+			<input type="text" class="search-location-field">
+			<!--<input type="button" value="search" class="search-location" data-bind="click: searchList()">-->
+			<input type="button" value="search" class="search-location" onclick="searchList()">
+			<h4>locations</h4>
+			<ul style="cursor:pointer;" class="locations-list" data-bind="foreach: {data: list}">
+			<!--<ul style="cursor:pointer;" class="locations-list" data-bind="value: visibleListItems()">-->
+			<!--<ul style="cursor:pointer;" class="locations-list" data-bind="text: visibleListItem.list">-->
+				<li data-bind="text: name, click: function() { console.log(self); }" ></li>
+			</ul>
+			
+		</div>
+		<div class="col-md-9">
+			<div class="row" id="header">
+
+			</div>
+			<div id="map" data-bind="style:{width:'600px',height:'500px'},map:map"></div>
+		</div>
+	</div>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCWq1WlnyXnXKS0aPt4m-AIF7d_bHrC8TE"></script>
+	<script src="js/knockout-3.3.0.js"></script>
+	<script src="js/app.js"></script>
+</body>
+</html>
