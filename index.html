@@ -15,13 +15,15 @@
 			<h1>Waterloo Ontario</h1>
 			<input type="text" class="search-location-field">
 			<!--<input type="button" value="search" class="search-location" data-bind="click: searchList()">-->
-			<input type="button" value="search" class="search-location" onclick="searchList()">
+			<input type="button" value="search" class="search-location" data-bind="click: $root.searchList">
 			<h4>locations</h4>
-			<ul style="cursor:pointer;" class="locations-list" data-bind="foreach: {data: list}">
+			<ul class="locations-list" data-bind="foreach: {data: $root.list}">
 			<!--<ul style="cursor:pointer;" class="locations-list" data-bind="value: visibleListItems()">-->
 			<!--<ul style="cursor:pointer;" class="locations-list" data-bind="text: visibleListItem.list">-->
-				<li data-bind="text: name, click: function() { console.log(self); }" ></li>
-			</ul>
+				<!--<li data-bind="text: name, click: function() { console.log(self); }" ></li>-->
+				<li style="cursor:pointer;">
+					<span data-bind="text: name, click: $root.clickedListItem"></span>
+				</li			</ul>
 			
 		</div>
 		<div class="col-md-9">
