@@ -10,69 +10,90 @@ function viewModel(){
 		lat : 43.4753,
 		lng : -80.5272,
 		link : "http://en.wikipedia.org/w/api.php?action=opensearch&search=wilfrid_laurier_university&format=json&callback=wikiCallback",
-		valueString : "1"	
+		valueString : ""	
 	},
 	{ 
 		name : "University of Waterloo",
 		lat : 43.4689,
 		lng : -80.5400,
 		link : "http://en.wikipedia.org/w/api.php?action=opensearch&search=University_of_waterloo&format=json&callback=wikiCallback",
-		valueString : "2"
+		valueString : ""
 	},
 	{ 
 		name : "Conestoga College",
 		lat : 43.479239,
 		lng : -80.517953,
 		link : "http://en.wikipedia.org/w/api.php?action=opensearch&search=Conestoga_college&format=json&callback=wikiCallback",
-		valueString : "3"
+		valueString : ""
 	}, 
 	{
 		name : "Phils",
 		lat : 43.476095,
 		lng : -80.524554,
 		link : "http://en.wikipedia.org/w/api.php?action=opensearch&search=Phil_Gaglardi&format=json&callback=wikiCallback",
-		valueString : "4"
+		valueString : ""
 	}, 
 	{
 		name : "Chainsaw",
 		lat : 43.466123,
 		lng :  -80.522361,
 		link : "http://en.wikipedia.org/w/api.php?action=opensearch&search=waterloo,_ontario&format=json&callback=wikiCallback",
-		valueString : "5"
+		valueString : ""
 	},
 	{ 
 		name : "Waterloo Park",
 		lat : 43.466490,
 		lng : -80.532416,
 		link : "http://en.wikipedia.org/w/api.php?action=opensearch&search=waterloo,_ontario&format=json&callback=wikiCallback",
-		valueString : "6"
+		valueString : ""
 	}, 
 	{
 		name : "Bechtel Park",
 		lat : 43.482695,
 		lng :  -80.491708,
 		link : "http://en.wikipedia.org/w/api.php?action=opensearch&search=waterloo,_ontario&format=json&callback=wikiCallback",
-		valueString : "7"
+		valueString : ""
 	},
 	{ 
 		name : "RIM Park",
 		lat : 43.519484,
 		lng : -80.502236,
 		link : "http://en.wikipedia.org/w/api.php?action=opensearch&search=rim_park&format=json&callback=wikiCallback",
-		valueString : "8"
+		valueString : ""
 	}];
-
+	//the updateable list of items of the page 
 	self.Places = ko.observableArray(dataArray);
 
+	//if a list item is clicked creat a marker on the page 
 	this.clickedListItem = function(model, event) { 
-	
-		alert(model.name); 
+		markersArray.forEach(function(location) {
+			if(location.title === model.name){
+  				if (viewModel.openedInfoWindow != null){
+					viewModel.openedInfoWindow.close();
+        		};
+        		
+        		var infowindow = new google.maps.InfoWindow({
+					content: model.valueString
+				});
+				
+				
+				infowindow.open(viewModel.map, location);
+				
+				viewModel.openedInfoWindow = infowindow; 
+
+				google.maps.event.addListener(infowindow, 'closeclick', function() {
+					viewModel.openedInfoWindow = null;
+				});		
+				google.maps.event.addListener(viewModel.map, "click", function() {
+					infowindow.close();
+				});
+			};
+		});
 	};
 
-
-	this.searchList = function(){
+	//search the list of items and change the displayed view
+	this.searchList = function(){	
 		var currentVal = $('.search-location-field').val();
-
 		if(currentVal === "") { 
 			//if the search is empty refill array
 			self.Places(dataArray);
@@ -87,6 +108,7 @@ function viewModel(){
 			});
 			self.Places(searchArray); 
 		}
+		this.clearMap();
 		this.mapMarker(); 
 	};
 
@@ -106,9 +128,9 @@ function viewModel(){
 		            content: contentMarker,
 		            draggable: false
 			}); 
+			//create markers for with click listeners
 			google.maps.event.addListener(marker,"click",function(){
-        		 //octopus.popWindow.open(data.mapObj.googleMap, data.mapObj.marker);
-        		//console.log(marker.content);
+        		
         		if (viewModel.openedInfoWindow != null){
 					viewModel.openedInfoWindow.close();
         		};
@@ -117,28 +139,64 @@ function viewModel(){
 					content: item.valueString
 				});
 				
-				//marker.infowindow.close();
-				infowindow.open(viewModel.map.googleMap, this);
-
+				
+				infowindow.open(this.map, marker);
+				
 				viewModel.openedInfoWindow = infowindow; 
 
 				google.maps.event.addListener(infowindow, 'closeclick', function() {
 					viewModel.openedInfoWindow = null;
 				});
-				/*
-				google.maps.event.addListener(viewModel.map.googleMap, "click", function() {
-					console.log("test"); 
+				
+				
+				google.maps.event.addListener(viewModel.map, "click", function() {
 					infowindow.close();
 				});
-				*/
+				
+
 
 		    });
+		    markersArray.push(marker); 
 			marker.setMap(viewModel.map);
 		}); 
+	
 	};
+
+
+	//take all map markers off of the map 
+	this.clearMap = function() {
+		
+		if(markersArray != null){
+			
+	  		for (var i = 0; i < markersArray.length; i++) {
+	    		markersArray[i].setMap(null);
+	  		};
+	  		markersArray = [];
+  		};
+	};
+	//fetch data from wikipedia on each location and store it in the 
+	//data for each item
+	this.wikiData = function() {
+		var data = self.Places();
+		data.forEach(function(location){
+			var wikiURL = location.link; 
+
+			var value = $.ajax({
+		        url: wikiURL, 
+		        dataType: "jsonp",
+
+		        success: function( response) {
+		            var result = response[2]; 
+		            location.valueString = result[0]; 
+		        }
+		    }); 
+		});
+	  
+	};
+
 }; 
 
-
+//create the map on the page
 function initMap() {
 	viewModel.map = new google.maps.Map(document.getElementById('map'), {
 		zoom: 12,
@@ -147,15 +205,17 @@ function initMap() {
 	});
 };
 
-
-
+//array to store the markers being placed on the map
+var markersArray = [];
 	
+
 
 
 $(document).ready(function() {
 	mapDataViewmodel = new viewModel();
 	ko.applyBindings(mapDataViewmodel);
-	self.map = new initMap();
+	initMap();
 	mapDataViewmodel.mapMarker(); 
+	mapDataViewmodel.wikiData();
 
 });
