@@ -1,0 +1,8 @@
+- Navigate to the item titled index.html located in the root of the file provided. 
+- Open the file in a bowser similar to Google Chrome. 
+- on load you’ll notice on the left: a title, search bar, search button, and a list of locations 
+- on the right you’ll notice a map with as many markers as there are list items from the left. 
+- when you click on one of the map markers from the map a dialog box will appear with information provided from a wikipedia AJAX request. 
+- the dialog box can be closed via the X in the right hand corner.
+- in the search bar on the left you can search locations try searching “Park”(search is case sensitive)
+- you’ll the list updates to contain 3 items, the map will also update with the three locations
