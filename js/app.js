@@ -30,28 +30,28 @@ function viewModel(){
 		name : "Phils",
 		lat : 43.476095,
 		lng : -80.524554,
-		link : "http://en.wikipedia.org/w/api.php?action=opensearch&search=Phil_Gaglardi&format=json&callback=wikiCallback",
+		link : "http://en.wikipedia.org/w/api.php?action=opensearch&search=Phils_Grandsons_place&format=json&callback=wikiCallback",
 		valueString : ""
 	}, 
 	{
 		name : "Chainsaw",
 		lat : 43.466123,
 		lng :  -80.522361,
-		link : "http://en.wikipedia.org/w/api.php?action=opensearch&search=waterloo,_ontario&format=json&callback=wikiCallback",
+		link : "http://en.wikipedia.org/w/api.php?action=opensearch&search=chainsaw_the_bar&format=json&callback=wikiCallback",
 		valueString : ""
 	},
 	{ 
 		name : "Waterloo Park",
 		lat : 43.466490,
 		lng : -80.532416,
-		link : "http://en.wikipedia.org/w/api.php?action=opensearch&search=waterloo,_ontario&format=json&callback=wikiCallback",
+		link : "http://en.wikipedia.org/w/api.php?action=opensearch&search=waterloo_park_ontario&format=json&callback=wikiCallback",
 		valueString : ""
 	}, 
 	{
 		name : "Bechtel Park",
 		lat : 43.482695,
 		lng :  -80.491708,
-		link : "http://en.wikipedia.org/w/api.php?action=opensearch&search=waterloo,_ontario&format=json&callback=wikiCallback",
+		link : "http://en.wikipedia.org/w/api.php?action=opensearch&search=bechtal_park_waterloo_ontario&format=json&callback=wikiCallback",
 		valueString : ""
 	},
 	{ 
@@ -83,10 +83,21 @@ function viewModel(){
 
 				google.maps.event.addListener(infowindow, 'closeclick', function() {
 					viewModel.openedInfoWindow = null;
+					lastMarker.setAnimation(null);
 				});		
 				google.maps.event.addListener(viewModel.map, "click", function() {
 					infowindow.close();
+					lastMarker.setAnimation(null);
 				});
+				if (lastMarker !== null) {
+					lastMarker.setAnimation(null);
+					location.setAnimation(google.maps.Animation.BOUNCE);
+					lastMarker = location; 
+				}
+				else {
+					location.setAnimation(google.maps.Animation.BOUNCE);
+					lastMarker = location; 
+				}
 			};
 		});
 	};
@@ -142,17 +153,29 @@ function viewModel(){
 				
 				infowindow.open(this.map, marker);
 				
+
 				viewModel.openedInfoWindow = infowindow; 
 
 				google.maps.event.addListener(infowindow, 'closeclick', function() {
 					viewModel.openedInfoWindow = null;
+					lastMarker.setAnimation(null);
 				});
 				
 				
 				google.maps.event.addListener(viewModel.map, "click", function() {
 					infowindow.close();
+					lastMarker.setAnimation(null);
 				});
 				
+				if (lastMarker !== null) {
+					lastMarker.setAnimation(null);
+					marker.setAnimation(google.maps.Animation.BOUNCE);
+					lastMarker = marker; 
+				}
+				else {
+					marker.setAnimation(google.maps.Animation.BOUNCE);
+					lastMarker = marker; 
+				}
 
 
 		    });
@@ -187,7 +210,15 @@ function viewModel(){
 
 		        success: function( response) {
 		            var result = response[2]; 
-		            location.valueString = result[0]; 
+		            if(result[0] != null) {
+		            	location.valueString = result[0]; 
+		            }
+		            else {
+		            	location.valueString = "There is no article for this location";
+		            }
+		        },
+		        fail: function(){
+		        	location.valueString = "There was an error fetching the data";
 		        }
 		    }); 
 		});
@@ -207,7 +238,7 @@ function initMap() {
 
 //array to store the markers being placed on the map
 var markersArray = [];
-	
+var lastMarker = null; 	
 
 
 
