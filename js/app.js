@@ -1,5 +1,5 @@
 function viewModel(){
-	"use strict"; 
+	
 	var self = this;
 	map =[];
 	openedInfoWindow = null;
