@@ -1,10 +1,10 @@
 function viewModel(){
-	
+	"use strict";
 	var self = this;
-	map =[];
-	openedInfoWindow = null;
+	var map =[];
+	var openedInfoWindow = null;
 	var searchArray = [];
-	dataArray = [
+	var dataArray = [
 	{
 		name : "Wilfrid Laurier University",
 		lat : 43.4753,
@@ -128,7 +128,7 @@ function viewModel(){
 	  		markersArray = [];
   		}
   		self.triggerObservable();
-		currentList = self.Places();
+		var currentList = self.Places();
 		//create map markers for each visible list item
 		currentList.forEach(function(item){
 			var latLng = new google.maps.LatLng(
@@ -137,7 +137,7 @@ function viewModel(){
 			var contentMarker = new google.maps.Data(
             	ko.utils.unwrapObservable(item.valueString));
 			var marker = new google.maps.Marker({
-		            map: this.map.googleMap,
+		            map: viewModel.map.googleMap,
 		            position: latLng,
 		            title: item.name,
 		            content: contentMarker,
